@@ -59,7 +59,7 @@ class ProductRestIntegrationDocsTest extends RestDocsSupport {
 
         // when
         ResultActions getProductAction = mockMvc.perform(
-            get("/api/products?page=0&size=20"));
+            get("/api/products?page=0&size=20&capacity=5"));
 
         // then
         getProductAction.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andDo(
@@ -69,6 +69,7 @@ class ProductRestIntegrationDocsTest extends RestDocsSupport {
                     parameterWithName("sort").optional().description("정렬 할 컬럼 및 방향"),
                     parameterWithName("address").optional().description("숙소 주소"),
                     parameterWithName("category").optional().description("숙소 카테고리"),
+                    parameterWithName("capacity").optional().description("객실 최대 수용인원"),
                     parameterWithName("productName").optional().description("숙소 이름")),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),

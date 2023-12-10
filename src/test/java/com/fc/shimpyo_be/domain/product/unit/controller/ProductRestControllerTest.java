@@ -42,12 +42,15 @@ class ProductRestControllerTest {
         List<ProductResponse> productResponses = new ArrayList<>();
         productResponses.add(ProductMapper.toProductResponse(ProductFactory.createTestProduct()));
         SearchKeywordRequest searchKeywordRequest = SearchKeywordRequest.builder()
+            .address("")
+            .productName("")
+            .capacity(0l)
             .category(Category.MOTEL.getName()).build();
         Pageable pageable = Pageable.ofSize(10);
         doReturn(productResponses).when(productService).getProducts(searchKeywordRequest, pageable);
         ResponseEntity<ResponseDto<List<ProductResponse>>> result = productRestController.getProducts(
             searchKeywordRequest.productName(), searchKeywordRequest.address(),
-            searchKeywordRequest.category(), pageable);
+            searchKeywordRequest.category().get(0).getName(),searchKeywordRequest.capacity(), pageable);
         //then
         assertEquals(result.getStatusCode(), HttpStatus.OK);
         assertThat(result.getBody().getData()).usingRecursiveComparison()

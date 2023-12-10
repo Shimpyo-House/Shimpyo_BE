@@ -46,12 +46,10 @@ class ProductServiceTest {
             .productName("강릉 세인트 호텔").category(Category.MOTEL.getName()).address("강원도 강릉시 창해로 307")
             .build();
 
-        Specification<Product> spec = (root, query, criteriaBuilder) -> null;
-
         List<Product> expectedProducts = ProductFactory.createTestProducts();
         Pageable pageable = Pageable.ofSize(10);
         Page<Product> productPage = new PageImpl<>(expectedProducts);
-        given(productRepository.findAll(any(Specification.class), any(Pageable.class))).willReturn(
+        given(productRepository.findAll(any(SearchKeywordRequest.class), any(Pageable.class))).willReturn(
             productPage);
 
         //when

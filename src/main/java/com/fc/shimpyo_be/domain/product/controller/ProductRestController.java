@@ -37,13 +37,14 @@ public class ProductRestController {
 
     @GetMapping
     public ResponseEntity<ResponseDto<List<ProductResponse>>> getProducts(
-        @RequestParam(required = false) String productName,
-        @RequestParam(required = false) String address,
-        @RequestParam(required = false) String category,
+        @RequestParam(required = false, defaultValue = "") String productName,
+        @RequestParam(required = false, defaultValue = "") String address,
+        @RequestParam(required = false, defaultValue = "") String category,
+        @RequestParam(required = false, defaultValue = "0") Long capacity,
         @PageableConstraint(Product.class) @PageableDefault(size = 10, page = 0) Pageable pageable) {
         log.debug("productName: {}, address: {}, category: {}", productName, address, category);
         SearchKeywordRequest searchKeywordRequest = SearchKeywordRequest.builder()
-            .productName(productName).address(address).category(category).build();
+            .productName(productName).address(address).category(category).capacity(capacity).build();
 
         return ResponseEntity.ok(ResponseDto.res(HttpStatus.OK,
             productService.getProducts(searchKeywordRequest, pageable), "숙소 목록을 성공적으로 조회했습니다."));
