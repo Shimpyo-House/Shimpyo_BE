@@ -27,6 +27,7 @@ public class ProductMapper {
             .price(product.getRooms().isEmpty()
                 ? 0 :
                 product.getRooms().stream().map(PricePickerByDateUtil::getPrice)
+                    .map(price->price==0?100000:price)
                     .min((o1, o2) -> Math.toIntExact(o1 - o2))
                     .orElseThrow())
             .capacity(product.getRooms().isEmpty()
