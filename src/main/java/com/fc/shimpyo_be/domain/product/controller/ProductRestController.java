@@ -2,7 +2,7 @@ package com.fc.shimpyo_be.domain.product.controller;
 
 import com.fc.shimpyo_be.domain.product.dto.request.SearchKeywordRequest;
 import com.fc.shimpyo_be.domain.product.dto.response.ProductDetailsResponse;
-import com.fc.shimpyo_be.domain.product.dto.response.ProductResponse;
+import com.fc.shimpyo_be.domain.product.dto.response.PaginatedProductResponse;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.exception.InvalidDateException;
 import com.fc.shimpyo_be.domain.product.exception.RoomNotReserveException;
@@ -11,7 +11,6 @@ import com.fc.shimpyo_be.domain.product.util.model.PageableConstraint;
 import com.fc.shimpyo_be.global.common.ResponseDto;
 import com.fc.shimpyo_be.global.util.DateTimeUtil;
 import jakarta.validation.constraints.Pattern;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,7 @@ public class ProductRestController {
 
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<ProductResponse>>> getProducts(
+    public ResponseEntity<ResponseDto<PaginatedProductResponse>> getProducts(
         @RequestParam(required = false, defaultValue = "") String productName,
         @RequestParam(required = false, defaultValue = "") String address,
         @RequestParam(required = false, defaultValue = "") String category,

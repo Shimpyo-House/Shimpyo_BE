@@ -9,6 +9,7 @@ import com.fc.shimpyo_be.domain.product.controller.ProductRestController;
 import com.fc.shimpyo_be.domain.product.dto.request.SearchKeywordRequest;
 import com.fc.shimpyo_be.domain.product.dto.response.ProductDetailsResponse;
 import com.fc.shimpyo_be.domain.product.dto.response.ProductResponse;
+import com.fc.shimpyo_be.domain.product.dto.response.PaginatedProductResponse;
 import com.fc.shimpyo_be.domain.product.entity.Category;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.exception.RoomNotReserveException;
@@ -41,19 +42,23 @@ class ProductRestControllerTest {
         //given
         List<ProductResponse> productResponses = new ArrayList<>();
         productResponses.add(ProductMapper.toProductResponse(ProductFactory.createTestProduct()));
+        PaginatedProductResponse paginatedProductResponse = PaginatedProductResponse.builder()
+            .productResponses(productResponses)
+            .pageCount(1)
+            .build();
         SearchKeywordRequest searchKeywordRequest = SearchKeywordRequest.builder()
             .address("")
             .productName("")
             .capacity(0l)
             .category(Category.MOTEL.getName()).build();
         Pageable pageable = Pageable.ofSize(10);
-        doReturn(productResponses).when(productService).getProducts(searchKeywordRequest, pageable);
-        ResponseEntity<ResponseDto<List<ProductResponse>>> result = productRestController.getProducts(
+        doReturn(paginatedProductResponse).when(productService).getProducts(searchKeywordRequest, pageable);
+        ResponseEntity<ResponseDto<PaginatedProductResponse>> result = productRestController.getProducts(
             searchKeywordRequest.productName(), searchKeywordRequest.address(),
             searchKeywordRequest.category().get(0).getName(),searchKeywordRequest.capacity(), pageable);
         //then
         assertEquals(result.getStatusCode(), HttpStatus.OK);
-        assertThat(result.getBody().getData()).usingRecursiveComparison()
+        assertThat(result.getBody().getData().productResponses()).usingRecursiveComparison()
             .isEqualTo(productResponses);
     }
 

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.doReturn;
 
 import com.fc.shimpyo_be.domain.product.dto.request.SearchKeywordRequest;
 import com.fc.shimpyo_be.domain.product.dto.response.ProductDetailsResponse;
-import com.fc.shimpyo_be.domain.product.dto.response.ProductResponse;
+import com.fc.shimpyo_be.domain.product.dto.response.PaginatedProductResponse;
 import com.fc.shimpyo_be.domain.product.entity.Category;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.factory.ProductFactory;
@@ -26,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -53,10 +52,10 @@ class ProductServiceTest {
             productPage);
 
         //when
-        List<ProductResponse> result = productService.getProducts(searchKeywordRequest, pageable);
+        PaginatedProductResponse result = productService.getProducts(searchKeywordRequest, pageable);
 
         //then
-        assertThat(result).usingRecursiveAssertion().isEqualTo(
+        assertThat(result.productResponses()).usingRecursiveAssertion().isEqualTo(
             productPage.getContent().stream().map(ProductMapper::toProductResponse).toList());
 
     }

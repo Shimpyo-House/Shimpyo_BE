@@ -74,22 +74,24 @@ class ProductRestIntegrationDocsTest extends RestDocsSupport {
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                     fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                    fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답 데이터"),
-                    fieldWithPath("data[].productId").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                    fieldWithPath("data.productResponses").type(JsonFieldType.ARRAY).description("숙소 응답 데이터 배열"),
+                    fieldWithPath("data.pageCount").type(JsonFieldType.NUMBER).description("총 페이지 개수"),
+                    fieldWithPath("data.productResponses[].productId").type(JsonFieldType.NUMBER)
                         .description("숙소 아이디"),
-                    fieldWithPath("data[].category").type(JsonFieldType.STRING)
+                    fieldWithPath("data.productResponses[].category").type(JsonFieldType.STRING)
                         .description("숙소 카테고리(호텔, 모텔, 풀빌라, 펜션)"),
-                    fieldWithPath("data[].address").type(JsonFieldType.STRING).description("숙소 주소"),
-                    fieldWithPath("data[].productName").type(JsonFieldType.STRING)
+                    fieldWithPath("data.productResponses[].address").type(JsonFieldType.STRING).description("숙소 주소"),
+                    fieldWithPath("data.productResponses[].productName").type(JsonFieldType.STRING)
                         .description("숙소 이름"),
-                    fieldWithPath("data[].favorites").type(JsonFieldType.BOOLEAN)
+                    fieldWithPath("data.productResponses[].favorites").type(JsonFieldType.BOOLEAN)
                         .description("즐겨찾기"),
-                    fieldWithPath("data[].starAvg").type(JsonFieldType.NUMBER).description("숙소 평점"),
-                    fieldWithPath("data[].image").type(JsonFieldType.STRING)
+                    fieldWithPath("data.productResponses[].starAvg").type(JsonFieldType.NUMBER).description("숙소 평점"),
+                    fieldWithPath("data.productResponses[].image").type(JsonFieldType.STRING)
                         .description("숙소 썸네일 이미지"),
-                    fieldWithPath("data[].price").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.productResponses[].price").type(JsonFieldType.NUMBER)
                         .description("숙소 내 방 최저 가격"),
-                    fieldWithPath("data[].capacity").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.productResponses[].capacity").type(JsonFieldType.NUMBER)
                         .description("최대 인원"))));
 
     }

@@ -2,18 +2,17 @@ package com.fc.shimpyo_be.domain.product.service;
 
 import com.fc.shimpyo_be.domain.product.dto.request.SearchKeywordRequest;
 import com.fc.shimpyo_be.domain.product.dto.response.ProductDetailsResponse;
-import com.fc.shimpyo_be.domain.product.dto.response.ProductResponse;
+import com.fc.shimpyo_be.domain.product.dto.response.PaginatedProductResponse;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.exception.ProductNotFoundException;
 import com.fc.shimpyo_be.domain.product.repository.ProductRepository;
 import com.fc.shimpyo_be.domain.product.util.ProductMapper;
 import com.fc.shimpyo_be.domain.room.dto.response.RoomResponse;
-import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
 import com.fc.shimpyo_be.global.util.DateTimeUtil;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -27,11 +26,15 @@ public class ProductService {
 
     private final RedisTemplate<String, Object> restTemplate;
 
-    public List<ProductResponse> getProducts(final SearchKeywordRequest searchKeywordRequest,
+    public PaginatedProductResponse getProducts(final SearchKeywordRequest searchKeywordRequest,
         final Pageable pageable) {
 
-        return Optional.of(productRepository.findAll(searchKeywordRequest, pageable)).orElseThrow().getContent()
-            .stream().map(ProductMapper::toProductResponse).toList();
+        Page<Product> products = Optional.of(productRepository.findAll(searchKeywordRequest, pageable)).orElseThrow();
+
+        return PaginatedProductResponse.builder()
+            .productResponses(products.getContent().stream().map(ProductMapper::toProductResponse).toList())
+            .pageCount(products.getTotalPages())
+            .build();
     }
 
     public ProductDetailsResponse getProductDetails(final Long productId, final String startDate,
