@@ -38,6 +38,7 @@ out/
 
 ### Application.yaml ###
 **/*.yaml
+**/*.yml
 
 ### REST Docs Html ###
 **/*.html
