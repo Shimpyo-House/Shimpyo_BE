@@ -8,10 +8,12 @@ import com.fc.shimpyo_be.domain.product.entity.Amenity;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.entity.ProductImage;
 import com.fc.shimpyo_be.domain.product.entity.ProductOption;
+import com.fc.shimpyo_be.domain.room.dto.response.RoomResponse;
 import com.fc.shimpyo_be.domain.room.entity.Room;
 import com.fc.shimpyo_be.domain.room.util.RoomMapper;
 import com.fc.shimpyo_be.global.util.PricePickerByDateUtil;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ProductMapper {
@@ -38,11 +40,15 @@ public class ProductMapper {
     }
 
     public static ProductDetailsResponse toProductDetailsResponse(Product product) {
+        HashSet<Long> roomCode = new HashSet<>();
+
+        List<RoomResponse> roomResponses = product.getRooms().stream()
+            .map(RoomMapper::toRoomResponse).distinct().toList();
 
         List<String> images = new ArrayList<>();
         images.add(product.getThumbnail());
 
-        if(product.getPhotoUrls() != null) {
+        if (product.getPhotoUrls() != null) {
             images.addAll(product.getPhotoUrls().stream().map(ProductImage::getPhotoUrl).toList());
         }
 
@@ -58,7 +64,7 @@ public class ProductMapper {
             .productOptionResponse(toProductOptionResponse(product.getProductOption()))
             .favorites(false)
             .images(images)
-            .rooms(product.getRooms().stream().map(RoomMapper::toRoomResponse).toList())
+            .rooms(roomResponses)
             .build();
     }
 

@@ -8,12 +8,11 @@ import com.fc.shimpyo_be.domain.product.exception.ProductNotFoundException;
 import com.fc.shimpyo_be.domain.product.repository.ProductRepository;
 import com.fc.shimpyo_be.domain.product.repository.model.ProductSpecification;
 import com.fc.shimpyo_be.domain.product.util.ProductMapper;
-import com.fc.shimpyo_be.domain.room.dto.response.RoomResponse;
-import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
 import com.fc.shimpyo_be.global.util.DateTimeUtil;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,8 +25,6 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
-
-    private final RoomRepository roomRepository;
 
     private final RedisTemplate<String, Object> restTemplate;
 
@@ -65,14 +62,32 @@ public class ProductService {
             .orElseThrow(ProductNotFoundException::new);
         ProductDetailsResponse productDetailsResponse = ProductMapper.toProductDetailsResponse(
             product);
-        productDetailsResponse.rooms().stream().filter(
-                roomResponse -> !isAvailableForReservation(roomResponse.getRoomId(), startDate,
-                    endDate))
-            .forEach(RoomResponse::setReserved);
+        productDetailsResponse.rooms().stream().forEach(
+            roomResponse -> roomResponse.setRemaining(
+                isAvailableForReservationUsingRoomCode(product, roomResponse.getRoomCode(),
+                    startDate,
+                    endDate)));
         return productDetailsResponse;
     }
 
-    public boolean isAvailableForReservation(final Long roomId, final String startDate,
+    public long isAvailableForReservationUsingRoomCode(final Product product, final Long roomCode,
+        final String startDate,
+        final String endDate) {
+
+        AtomicLong remaining = new AtomicLong(0);
+
+        product.getRooms().stream()
+            .filter(room -> room.getCode() == roomCode)
+            .forEach(room -> {
+                if (isAvailableForReservationUsingRoomId(room.getId(), startDate, endDate)) {
+                    remaining.getAndIncrement();
+                }
+            });
+
+        return remaining.get();
+    }
+
+    public boolean isAvailableForReservationUsingRoomId(final Long roomId, final String startDate,
         final String endDate) {
         ValueOperations<String, Object> values = restTemplate.opsForValue();
 
@@ -82,7 +97,7 @@ public class ProductService {
         while (startLocalDate.isBefore(endLocalDate)) {
 
             String accommodationDate = DateTimeUtil.toString(startLocalDate);
-            if (values.get("roomId:" + String.valueOf(roomId) + ":" + accommodationDate) != null) {
+            if (values.get("roomId:" + roomId + ":" + accommodationDate) != null) {
                 return false;
             }
             startLocalDate = startLocalDate.plusDays(1);
