@@ -41,6 +41,7 @@ public class CartService {
 
     private final CartCustomRepositoryImpl cartCustomRepository;
 
+    @Transactional(readOnly = true)
     public List<CartResponse> getCarts() {
         List<Cart> carts = cartRepository.findByMemberId(
             securityUtil.getCurrentMemberId()).orElseThrow();
@@ -81,6 +82,7 @@ public class CartService {
 
         return CartMapper.toCartDeleteResponse(cart);
     }
+
 
     private CartResponse getCartResponse(final Cart cart) {
         List<Room> rooms = Optional.of(roomRepository.findByCode(cart.getRoomCode()))

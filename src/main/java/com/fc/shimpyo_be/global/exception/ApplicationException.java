@@ -7,7 +7,7 @@ public abstract class ApplicationException extends RuntimeException{
 
     private final ErrorCode errorCode;
 
-    protected ApplicationException(ErrorCode errorCode) {
+    public ApplicationException(ErrorCode errorCode) {
         super(errorCode.getSimpleMessage());
         this.errorCode = errorCode;
     }

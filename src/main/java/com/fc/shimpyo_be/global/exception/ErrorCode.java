@@ -45,6 +45,7 @@ public enum ErrorCode {
 
     // Common
     INVALID_DATE(HttpStatus.BAD_REQUEST,"잘못된 날짜 데이터입니다."),
+    INVALID_PARM(HttpStatus.BAD_REQUEST, "잘못된 매개변수 입니다."),
 
     // 즐겨찾기
     FAVORITE_ALREADY_REGISTER(HttpStatus.BAD_REQUEST, "이미 즐겨찾기에 등록한 숙소입니다."),

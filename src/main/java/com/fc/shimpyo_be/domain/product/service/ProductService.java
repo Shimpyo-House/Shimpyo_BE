@@ -10,8 +10,12 @@ import com.fc.shimpyo_be.domain.product.exception.ProductNotFoundException;
 import com.fc.shimpyo_be.domain.product.repository.ProductCustomRepositoryImpl;
 import com.fc.shimpyo_be.domain.product.repository.ProductRepository;
 import com.fc.shimpyo_be.domain.product.util.ProductMapper;
+import com.fc.shimpyo_be.domain.reservation.exception.InvalidRequestException;
 import com.fc.shimpyo_be.domain.room.entity.Room;
 import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
+import com.fc.shimpyo_be.global.exception.ApplicationException;
+import com.fc.shimpyo_be.global.exception.ErrorCode;
+import com.fc.shimpyo_be.global.exception.InvalidParameterException;
 import com.fc.shimpyo_be.global.util.DateTimeUtil;
 import com.fc.shimpyo_be.global.util.SecurityUtil;
 import java.time.LocalDate;
@@ -25,9 +29,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -100,6 +106,13 @@ public class ProductService {
         }
 
         return true;
+    }
+
+    public Product getProductById(final Long productId) {
+        if(productId == null) {
+            throw new InvalidParameterException();
+        }
+        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
     }
 
     private List<ProductResponse> getProductResponseSettingFavorites(List<Product> products) {
