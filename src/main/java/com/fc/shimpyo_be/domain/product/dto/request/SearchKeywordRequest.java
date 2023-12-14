@@ -16,7 +16,7 @@ public record SearchKeywordRequest(
     @NotNull
     Long capacity) {
 
-    final static List<Category> allCategories = Arrays.stream(Category.values()).toList();
+    private final static List<Category> allCategories = Arrays.stream(Category.values()).toList();
 
     @Builder
     public SearchKeywordRequest(String productName, String address, String category,

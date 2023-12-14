@@ -83,8 +83,8 @@ public class CartService {
         return CartMapper.toCartDeleteResponse(cart);
     }
 
-
-    private CartResponse getCartResponse(final Cart cart) {
+    @Transactional(readOnly = true)
+    public CartResponse getCartResponse(final Cart cart) {
         List<Room> rooms = Optional.of(roomRepository.findByCode(cart.getRoomCode()))
             .orElseThrow();
 

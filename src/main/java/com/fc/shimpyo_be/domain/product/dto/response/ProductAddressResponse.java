@@ -2,7 +2,7 @@ package com.fc.shimpyo_be.domain.product.dto.response;
 
 import lombok.Builder;
 
-public record ProductAddressResponse (
+public record ProductAddressResponse(
     String address,
     String detailAddress,
     double mapX,

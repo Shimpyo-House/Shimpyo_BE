@@ -4,24 +4,25 @@ import lombok.Builder;
 
 public record ProductAmenityResponse(
 
-        boolean barbecue,
-        boolean beauty,
-        boolean beverage,
-        boolean bicycle,
-        boolean campfire,
-        boolean fitness,
-        boolean karaoke,
-        boolean publicBath,
-        boolean publicPc,
-        boolean sauna,
-        boolean sports,
-        boolean seminar
+    boolean barbecue,
+    boolean beauty,
+    boolean beverage,
+    boolean bicycle,
+    boolean campfire,
+    boolean fitness,
+    boolean karaoke,
+    boolean publicBath,
+    boolean publicPc,
+    boolean sauna,
+    boolean sports,
+    boolean seminar
 ) {
 
     @Builder
-    public ProductAmenityResponse(boolean barbecue, boolean beauty, boolean beverage, boolean bicycle,
-                   boolean campfire, boolean fitness, boolean karaoke, boolean publicBath, boolean publicPc,
-                   boolean sauna, boolean sports, boolean seminar) {
+    public ProductAmenityResponse(boolean barbecue, boolean beauty, boolean beverage,
+        boolean bicycle,
+        boolean campfire, boolean fitness, boolean karaoke, boolean publicBath, boolean publicPc,
+        boolean sauna, boolean sports, boolean seminar) {
         this.barbecue = barbecue;
         this.beauty = beauty;
         this.beverage = beverage;
