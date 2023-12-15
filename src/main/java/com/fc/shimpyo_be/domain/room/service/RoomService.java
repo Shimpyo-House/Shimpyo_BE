@@ -24,7 +24,6 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     public List<RoomWithProductResponseDto> getRoomsWithProductInfo(List<Long> roomIds) {
-        log.debug("{} ::: {}", getClass().getSimpleName(), "getRoomsWithProductInfo");
 
         return roomRepository.findAllInIdsWithProductAndPrice(roomIds)
             .stream()
@@ -33,7 +32,6 @@ public class RoomService {
     }
 
     public List<Long> getRoomIdsByCode(Long roomCode) {
-        log.debug("{} ::: {}", getClass().getSimpleName(), "getRoomIdListByRoomCode");
 
         return roomRepository.findIdsByCode(roomCode);
     }
@@ -43,5 +41,6 @@ public class RoomService {
             throw new InvalidParameterException();
         }
         return roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
+
     }
 }
