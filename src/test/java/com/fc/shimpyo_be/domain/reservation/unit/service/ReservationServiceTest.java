@@ -22,12 +22,14 @@ import com.fc.shimpyo_be.domain.room.entity.RoomOption;
 import com.fc.shimpyo_be.domain.room.entity.RoomPrice;
 import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
 import com.fc.shimpyo_be.global.util.DateTimeUtil;
+import com.fc.shimpyo_be.global.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
@@ -40,6 +42,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 @Slf4j
 @Import(TestDBCleanerConfig.class)
@@ -63,6 +66,9 @@ public class ReservationServiceTest extends AbstractContainersSupport {
 
     @Autowired
     private DatabaseCleanUp databaseCleanUp;
+
+    @MockBean
+    private SecurityUtil securityUtil;
 
     private Member member;
 
@@ -89,6 +95,8 @@ public class ReservationServiceTest extends AbstractContainersSupport {
                 .authority(Authority.ROLE_USER)
                 .build()
         );
+
+        given(securityUtil.getCurrentMemberId()).willReturn(member.getId());
 
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
