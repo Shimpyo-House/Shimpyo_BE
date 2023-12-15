@@ -12,10 +12,12 @@ import com.fc.shimpyo_be.domain.cart.util.CartMapper;
 import com.fc.shimpyo_be.domain.member.entity.Member;
 import com.fc.shimpyo_be.domain.member.exception.MemberNotFoundException;
 import com.fc.shimpyo_be.domain.member.repository.MemberRepository;
+import com.fc.shimpyo_be.domain.member.service.MemberService;
 import com.fc.shimpyo_be.domain.product.exception.RoomNotReserveException;
 import com.fc.shimpyo_be.domain.product.service.ProductService;
 import com.fc.shimpyo_be.domain.room.entity.Room;
 import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
+import com.fc.shimpyo_be.global.exception.InvalidParameterException;
 import com.fc.shimpyo_be.global.util.SecurityUtil;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class CartService {
 
     private final CartRepository cartRepository;
@@ -35,13 +38,12 @@ public class CartService {
 
     private final SecurityUtil securityUtil;
 
-    private final MemberRepository memberRepository;
-
     private final ProductService productService;
 
     private final CartCustomRepositoryImpl cartCustomRepository;
 
-    @Transactional(readOnly = true)
+    private final MemberService memberService;
+
     public List<CartResponse> getCarts() {
         List<Cart> carts = cartRepository.findByMemberId(
             securityUtil.getCurrentMemberId()).orElseThrow();
@@ -52,8 +54,7 @@ public class CartService {
     @Transactional
     public CartResponse addCart(@Valid @RequestBody CartCreateRequest cartCreateRequest) {
 
-        Member member = memberRepository.findById(securityUtil.getCurrentMemberId())
-            .orElseThrow(MemberNotFoundException::new);
+        Member member = memberService.getMemberById(securityUtil.getCurrentMemberId());
 
         Long countAvailableForReservation = productService.countAvailableForReservationUsingRoomCode(
             cartCreateRequest.roomCode(),
@@ -83,7 +84,6 @@ public class CartService {
         return CartMapper.toCartDeleteResponse(cart);
     }
 
-    @Transactional(readOnly = true)
     public CartResponse getCartResponse(final Cart cart) {
         List<Room> rooms = Optional.of(roomRepository.findByCode(cart.getRoomCode()))
             .orElseThrow();
@@ -91,5 +91,11 @@ public class CartService {
         return CartMapper.toCartResponse(cart, rooms.get(0));
     }
 
+    public Cart getCartById(Long cartId) {
+        if (cartId == null) {
+            throw new InvalidParameterException();
+        }
+        return cartRepository.findById(cartId).orElseThrow(CartNotFoundException::new);
+    }
 
 }
