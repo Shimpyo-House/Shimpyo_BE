@@ -2,7 +2,7 @@ package com.fc.shimpyo_be.domain.room.service;
 
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.exception.ProductNotFoundException;
-import com.fc.shimpyo_be.domain.product.exception.RoomNotFoundException;
+import com.fc.shimpyo_be.domain.room.exception.RoomNotFoundException;
 import com.fc.shimpyo_be.domain.room.dto.response.RoomWithProductResponseDto;
 import com.fc.shimpyo_be.domain.room.entity.Room;
 import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
