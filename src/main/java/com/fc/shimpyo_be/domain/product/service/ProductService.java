@@ -10,7 +10,6 @@ import com.fc.shimpyo_be.domain.product.exception.ProductNotFoundException;
 import com.fc.shimpyo_be.domain.product.repository.ProductCustomRepositoryImpl;
 import com.fc.shimpyo_be.domain.product.repository.ProductRepository;
 import com.fc.shimpyo_be.domain.product.util.ProductMapper;
-import com.fc.shimpyo_be.domain.reservation.exception.InvalidRequestException;
 import com.fc.shimpyo_be.domain.room.entity.Room;
 import com.fc.shimpyo_be.domain.room.repository.RoomRepository;
 import com.fc.shimpyo_be.global.exception.ApplicationException;
