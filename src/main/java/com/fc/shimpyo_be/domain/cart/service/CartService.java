@@ -85,6 +85,7 @@ public class CartService {
     }
 
     public CartResponse getCartResponse(final Cart cart) {
+
         List<Room> rooms = Optional.of(roomRepository.findByCode(cart.getRoomCode()))
             .orElseThrow();
 

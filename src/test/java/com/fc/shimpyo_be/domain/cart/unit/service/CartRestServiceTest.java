@@ -19,6 +19,7 @@ import com.fc.shimpyo_be.domain.cart.util.CartMapper;
 import com.fc.shimpyo_be.domain.member.entity.Authority;
 import com.fc.shimpyo_be.domain.member.entity.Member;
 import com.fc.shimpyo_be.domain.member.repository.MemberRepository;
+import com.fc.shimpyo_be.domain.member.service.MemberService;
 import com.fc.shimpyo_be.domain.product.entity.Product;
 import com.fc.shimpyo_be.domain.product.factory.ProductFactory;
 import com.fc.shimpyo_be.domain.product.service.ProductService;
@@ -43,17 +44,14 @@ public class CartRestServiceTest {
     private static Room room;
     private static Member member;
     private static Cart cart;
-
-    @Mock
-    private MemberRepository memberRepository;
-
     @Mock
     private ProductService productService;
     @Mock
     private RoomRepository roomRepository;
     @Mock
     private CartRepository cartRepository;
-
+    @Mock
+    private MemberService memberService;
     @Mock
     private CartCustomRepositoryImpl cartCustomRepository;
     @Mock
@@ -103,8 +101,8 @@ public class CartRestServiceTest {
         given(cartCustomRepository.countByRoomCodeAndMemberIdContainsDate(any(),
             anyLong())).willReturn(0L);
         given(securityUtil.getCurrentMemberId()).willReturn(member.getId());
+        given(memberService.getMemberById(member.getId())).willReturn(member);
         given(roomRepository.findByCode(cartCreateRequest.roomCode())).willReturn(List.of(room));
-        given(memberRepository.findById(member.getId())).willReturn(Optional.ofNullable(member));
         doReturn(1L).when(productService)
             .countAvailableForReservationUsingRoomCode(anyLong(),
                 anyString(),
